@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ilha de Projetos do Nathan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bungee&family=Outfit:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  /* Layout: a ilha isométrica animada é o menu; cada construção é um projeto. Painel lateral mostra o selecionado. */
+  --deep: #05232b;
+  --sea: #0b3a45;
+  --panel: #0e4250;
+  --line: #1d5d6c;
+  --text: #eafaf6;
+  --muted: #9fcac6;
+  --coral: #ff7a59;
+  --sun: #ffd166;
+  --mint: #7ce0c3;
+  --font-display: "Bungee", "Impact", "Arial Black", sans-serif;
+  --font-body: "Outfit", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body { background: var(--deep); color: var(--text); font-family: var(--font-body); font-size: 16px; line-height: 1.55; }
+a { color: var(--coral); }
+:focus-visible { outline: 3px solid var(--sun); outline-offset: 3px; border-radius: 8px; }
+.wrap { max-width: 1240px; margin: 0 auto; padding: 0 20px; }
+
+nav { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 18px 0 8px; flex-wrap: wrap; }
+.logo { font-family: var(--font-display); font-size: 20px; color: var(--text); text-decoration: none; display: flex; align-items: center; gap: 10px; }
+.logo i { width: 26px; height: 26px; display: inline-block; background: var(--coral); transform: rotate(45deg) scale(.75); border-radius: 5px; box-shadow: 6px -6px 0 var(--sun); }
+nav ul { list-style: none; margin: 0; padding: 0; display: flex; gap: 22px; }
+nav ul a { color: var(--muted); text-decoration: none; font-weight: 700; }
+nav ul a:hover { color: var(--text); }
+
+.intro { display: flex; align-items: end; justify-content: space-between; gap: 24px; flex-wrap: wrap; padding: 22px 0 6px; }
+.intro h1 { font-family: var(--font-display); font-weight: 400; font-size: clamp(30px, 5.2vw, 62px); line-height: 1.02; margin: 0; text-wrap: balance; max-width: 13em; }
+.intro h1 span { color: var(--coral); }
+.intro p { margin: 0; color: var(--muted); max-width: 25em; font-size: 17px; }
+.intro p b { color: var(--sun); font-weight: 700; }
+
+/* Ilha */
+.world {
+  position: relative; margin-top: 18px; border-radius: 22px; overflow: hidden;
+  background:
+    radial-gradient(ellipse 60% 55% at 40% 55%, #17a2ad 0%, #0d7684 38%, #0a4f5c 70%, #083b46 100%);
+  height: clamp(460px, 62vw, 680px);
+}
+#island { position: absolute; inset: 0; width: 100%; height: 100%; display: block; cursor: pointer; }
+.pins { position: absolute; inset: 0; pointer-events: none; }
+.pin {
+  position: absolute; pointer-events: auto; transform: translate(-50%, -100%);
+  font: 700 14px var(--font-body); color: var(--deep); background: var(--text);
+  border: none; border-radius: 999px; padding: 5px; cursor: pointer;
+  display: flex; align-items: center; gap: 4px; white-space: nowrap;
+  box-shadow: 0 6px 18px rgba(0,0,0,.25); transition: transform .2s, background .2s;
+}
+.pin::after { content: ""; position: absolute; left: 50%; bottom: -6px; transform: translateX(-50%); border: 6px solid transparent; border-bottom: none; border-top-color: inherit; border-top: 7px solid var(--pin-bg, var(--text)); }
+.pin b { width: 22px; height: 22px; border-radius: 50%; background: var(--deep); color: var(--text); display: grid; place-items: center; font-size: 12px; font-variant-numeric: tabular-nums; }
+.pin .nm { max-width: 0; overflow: hidden; transition: max-width .3s, padding .3s; }
+.pin:hover .nm, .pin:focus-visible .nm, .pin[aria-pressed="true"] .nm { max-width: 220px; padding-right: 6px; }
+.pin:hover { transform: translate(-50%, -112%); }
+.pin[aria-pressed="true"] { background: var(--coral); --pin-bg: var(--coral); color: var(--deep); transform: translate(-50%, -112%); }
+.pin[aria-pressed="true"] b { background: var(--deep); color: var(--sun); }
+
+.card {
+  position: absolute; right: 18px; top: 18px; bottom: 18px; width: 370px;
+  background: rgba(5, 35, 43, .86); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(124, 224, 195, .25); border-radius: 18px;
+  padding: 22px; display: flex; flex-direction: column; gap: 12px; overflow-y: auto;
+}
+.card .num { font-family: var(--font-display); color: var(--sun); font-size: 13px; letter-spacing: 1px; }
+.card h2 { font-family: var(--font-display); font-weight: 400; font-size: 28px; line-height: 1.05; margin: 0; text-wrap: balance; }
+.chip { align-self: flex-start; font-size: 12px; font-weight: 800; letter-spacing: .6px; text-transform: uppercase; padding: 4px 10px; border-radius: 999px; display: inline-flex; gap: 6px; align-items: center; }
+.chip::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+.chip.live { color: var(--mint); background: rgba(124,224,195,.14); }
+.chip.dev { color: var(--sun); background: rgba(255,209,102,.14); }
+.chip.idea { color: #9ad3ff; background: rgba(154,211,255,.14); }
+.chip.done { color: #ffb3c7; background: rgba(255,179,199,.14); }
+.card p { margin: 0; color: var(--muted); }
+.tags { display: flex; gap: 6px; flex-wrap: wrap; }
+.tags span { font-size: 13px; padding: 3px 10px; border-radius: 6px; background: rgba(124,224,195,.1); color: var(--text); }
+.cta { margin-top: auto; display: flex; flex-direction: column; gap: 10px; }
+.play {
+  display: flex; justify-content: center; align-items: center; gap: 8px; text-decoration: none;
+  background: var(--coral); color: var(--deep); font-weight: 800; font-size: 16px;
+  padding: 13px; border-radius: 12px; box-shadow: 0 4px 0 #c4502f; transition: transform .1s, box-shadow .1s;
+}
+.play:active { transform: translateY(3px); box-shadow: 0 1px 0 #c4502f; }
+.play.off { background: rgba(255,255,255,.08); color: var(--muted); box-shadow: none; pointer-events: none; }
+.step { display: flex; gap: 8px; }
+.step button { flex: 1; font: 700 14px var(--font-body); color: var(--text); background: rgba(255,255,255,.06); border: 1px solid var(--line); border-radius: 10px; padding: 9px; cursor: pointer; }
+.step button:hover { background: rgba(255,255,255,.12); }
+.hint { position: absolute; left: 18px; bottom: 16px; font-size: 13px; color: rgba(234,250,246,.75); background: rgba(5,35,43,.55); padding: 6px 12px; border-radius: 999px; pointer-events: none; }
+
+/* Lista */
+section { padding: 56px 0 10px; }
+h3.sec { font-family: var(--font-display); font-weight: 400; font-size: 28px; margin: 0 0 18px; }
+.list { display: grid; gap: 10px; }
+.row {
+  display: grid; grid-template-columns: 44px 1.3fr 1fr auto; align-items: center; gap: 16px;
+  padding: 14px 18px; border-radius: 14px; background: var(--sea); border: 1px solid transparent;
+  cursor: pointer; text-align: left; font: inherit; color: inherit; width: 100%;
+}
+.row:hover { border-color: var(--line); }
+.row .n { font-family: var(--font-display); color: var(--coral); font-size: 18px; font-variant-numeric: tabular-nums; }
+.row strong { font-size: 17px; }
+.row small { color: var(--muted); display: block; font-size: 14px; }
+.row .plat { color: var(--muted); font-size: 14px; }
+
+.about { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.box { background: var(--sea); border-radius: 18px; padding: 24px; }
+.box p { color: var(--muted); margin: 0 0 12px; max-width: 36em; }
+.tools { display: flex; flex-wrap: wrap; gap: 8px; }
+.tools span { padding: 7px 13px; border-radius: 10px; background: var(--panel); font-weight: 700; font-size: 14px; }
+.tools span::first-letter { color: var(--sun); }
+.mail { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-top: 6px; }
+.mail code { font: 700 16px var(--font-body); background: var(--panel); padding: 9px 14px; border-radius: 10px; word-break: break-all; }
+.mail button { font: 800 14px var(--font-body); background: var(--sun); color: var(--deep); border: none; padding: 10px 16px; border-radius: 10px; cursor: pointer; }
+footer { color: var(--muted); font-size: 14px; padding: 40px 0; }
+
+@media (max-width: 900px) {
+  .world { height: auto; overflow: visible; background: none; }
+  .stage { position: relative; height: 72vw; min-height: 340px; border-radius: 22px; overflow: hidden;
+    background: radial-gradient(ellipse 70% 60% at 50% 55%, #17a2ad 0%, #0d7684 40%, #0a4f5c 75%, #083b46 100%); }
+  .card { position: relative; inset: auto; width: auto; margin-top: 14px; background: var(--sea); }
+  .hint { display: none; }
+  .about { grid-template-columns: 1fr; }
+  .row { grid-template-columns: 36px 1fr auto; }
+  .row .plat { display: none; }
+}
+@media (min-width: 901px) { .stage { position: absolute; inset: 0; } }
+@media (max-width: 420px) { nav ul { gap: 14px; } .pin { font-size: 12px; } }
+@media (prefers-reduced-motion: reduce) { .pin, .pin .nm { transition: none; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <nav>
+    <a class="logo" href="#ilha"><i></i>Nathan</a>
+    <ul>
+      <li><a href="#ilha">Ilha</a></li>
+      <li><a href="#projetos">Projetos</a></li>
+      <li><a href="#contato">Contato</a></li>
+    </ul>
+  </nav>
+
+  <div class="intro" id="ilha">
+    <h1>Bem-vindo à minha <span>ilha</span> de projetos.</h1>
+    <p>Cada construção é um jogo ou app que eu fiz. <b>Toque numa delas</b> para ver o projeto e jogar direto no navegador ou no celular.</p>
+  </div>
+
+  <div class="world">
+    <div class="stage">
+      <canvas id="island" aria-label="Ilha isométrica com construções que representam os projetos"></canvas>
+      <div class="pins" id="pins"></div>
+      <div class="hint">Clique nas placas ou nas construções</div>
+    </div>
+    <aside class="card" id="card" aria-live="polite">
+      <div class="num" id="cNum">PROJETO 01 / 07</div>
+      <h2 id="cTitle">Legacy of Empire</h2>
+      <span class="chip live" id="cChip">No ar</span>
+      <p id="cText"></p>
+      <div class="tags" id="cTags"></div>
+      <div class="cta">
+        <a class="play" id="cPlay" href="#" target="_blank" rel="noopener">Jogar agora ↗</a>
+        <div class="step">
+          <button type="button" id="prev">← Anterior</button>
+          <button type="button" id="next">Próximo →</button>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <section id="projetos">
+    <h3 class="sec">Todos os projetos</h3>
+    <div class="list" id="list"></div>
+  </section>
+
+  <section id="contato">
+    <div class="about">
+      <div class="box">
+        <h3 class="sec">Sobre</h3>
+        <p>Sou o Nathan. Crio jogos de estratégia, construção e simulação com visual isométrico e pixel art, sempre pensando em rodar bem no celular. Cada projeto sai em versões, da 0.1 até a 1.0, e vai para o ar com deploy automático.</p>
+        <div class="tools"><span>Phaser 3</span><span>JavaScript</span><span>HTML e CSS</span><span>Cloudflare Workers</span><span>GitHub</span><span>Android</span></div>
+      </div>
+      <div class="box">
+        <h3 class="sec">Contato</h3>
+        <p>Quer testar um jogo, dar uma ideia ou encomendar um site? Me manda um e-mail.</p>
+        <div class="mail"><code>nathanmacioscik12@gmail.com</code><button type="button" id="copy">Copiar e-mail</button></div>
+        <p style="margin-top:14px">GitHub: <b>github.com/seu-usuario</b></p>
+      </div>
+    </div>
+  </section>
+
+  <footer>© <span id="year">2026</span> Nathan · Ilha construída à mão, publicada no Cloudflare.</footer>
+</div>
+
+<script>
+/* ========= PROJETOS: edite aqui ========= */
+const PROJECTS = [
+  { site: "castle", status: "live", title: "Legacy of Empire", plat: "Navegador · Celular",
+    text: "Estratégia em tempo real inspirada no Age of Empires 2, com campanhas, visual isométrico e cidades que mudam de cara a cada era. Próximo passo: modo online para jogar com um amigo.",
+    tags: ["RTS", "Campanhas", "Isométrico"], url: "https://legacy-of-empire.nathanmacioscik12.workers.dev" },
+  { site: "village", status: "live", title: "Vale do Ermo", plat: "Navegador · Android em breve",
+    text: "Construção e sobrevivência de uma vila medieval no estilo Banished. Pixel art isométrica com Phaser 3, lançada em versões rumo à 1.0.",
+    tags: ["City builder", "Sobrevivência", "Phaser 3"], url: "https://vale-do-ermo.nathanmacioscik12.workers.dev" },
+  { site: "factory", status: "dev", title: "Factory Simulator", plat: "Navegador · Android",
+    text: "Jogo de fã, não oficial, de gerenciamento de uma fábrica de motosserras: linhas de produção, estoque e expansão da fábrica.",
+    tags: ["Gerenciamento", "Isométrico", "Phaser 3"] },
+  { site: "pit", status: "dev", title: "Operador de Escavadeira", plat: "Navegador · Celular",
+    text: "Simulador de escavadeira em primeira e terceira pessoa: cavar, carregar o caminhão e entregar a obra no prazo.",
+    tags: ["Simulação", "1ª e 3ª pessoa"] },
+  { site: "farm", status: "done", title: "Jogo de Fazenda", plat: "Navegador",
+    text: "Meu primeiro jogo concluído: plantar, colher, vender e fazer a fazenda crescer.",
+    tags: ["Fazenda", "Casual"] },
+  { site: "city", status: "idea", title: "Gerenciador de Cidade", plat: "Em planejamento",
+    text: "Um city builder com simulação profunda no nível do Cities: Skylines, mas com visual simples e leve para rodar em qualquer aparelho.",
+    tags: ["City builder", "Simulação"] },
+  { site: "tower", status: "dev", title: "Assistente Financeiro", plat: "WhatsApp",
+    text: "Bot de WhatsApp em que você manda os gastos do mês e ele registra e organiza tudo. O plano é virar um assistente por voz completo.",
+    tags: ["Bot", "WhatsApp", "Finanças"] }
+];
+const STATUS = { live: "No ar", dev: "Em desenvolvimento", idea: "Ideia", done: "Concluído" };
+
+/* ========= Motor isométrico ========= */
+const cv = document.getElementById("island");
+const ctx = cv.getContext("2d");
+const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+let W = 0, H = 0, T = 10, OX = 0, OY = 0;
+const N = 18;
+
+function rng(seed) { return () => (seed = (seed * 16807) % 2147483647, (seed - 1) / 2147483646); }
+function shade(hex, f) {
+  const n = parseInt(hex.slice(1), 16);
+  const c = [(n >> 16) & 255, (n >> 8) & 255, n & 255].map(v => Math.max(0, Math.min(255, Math.round(v * f))));
+  return "rgb(" + c.join(",") + ")";
+}
+const P = (x, y, z) => [OX + (x - y) * T, OY + (x + y) * T / 2 - z * T];
+function poly(pts, fill) { ctx.beginPath(); ctx.moveTo(pts[0][0], pts[0][1]); for (let i = 1; i < pts.length; i++) ctx.lineTo(pts[i][0], pts[i][1]); ctx.closePath(); ctx.fillStyle = fill; ctx.fill(); }
+function box(x, y, z, w, d, h, col) {
+  poly([P(x, y + d, z + h), P(x + w, y + d, z + h), P(x + w, y + d, z), P(x, y + d, z)], shade(col, 0.78));
+  poly([P(x + w, y, z + h), P(x + w, y + d, z + h), P(x + w, y + d, z), P(x + w, y, z)], shade(col, 0.6));
+  poly([P(x, y, z + h), P(x + w, y, z + h), P(x + w, y + d, z + h), P(x, y + d, z + h)], col);
+}
+function roof(x, y, z, w, d, h, col) {
+  const a = P(x, y, z), b = P(x + w, y, z), c = P(x + w, y + d, z), e = P(x, y + d, z);
+  const r1 = P(x, y + d / 2, z + h), r2 = P(x + w, y + d / 2, z + h);
+  poly([e, c, r2, r1], shade(col, 0.82)); poly([b, c, r2], shade(col, 0.62)); poly([a, b, r2, r1], col);
+}
+function tree(x, y, s, col) {
+  s = s || 1;
+  box(x + 0.42, y + 0.42, 0, 0.16, 0.16, 0.35 * s, "#7a5236");
+  box(x + 0.18, y + 0.18, 0.35 * s, 0.64, 0.64, 0.5 * s, col);
+  box(x + 0.3, y + 0.3, 0.85 * s, 0.4, 0.4, 0.32 * s, shadeHex(col, 1.18));
+}
+function shadeHex(hex, f) { const m = shade(hex, f).match(/\d+/g); return "#" + m.map(v => (+v).toString(16).padStart(2, "0")).join(""); }
+function palm(x, y, t) {
+  for (let k = 0; k < 5; k++) box(x + 0.44 + k * 0.03, y + 0.44, k * 0.25, 0.12, 0.12, 0.25, "#b07a45");
+  const sway = Math.sin(t * 1.5 + x) * 0.05;
+  [[1, 0], [-1, 0], [0, 1], [0, -1]].forEach(([dx, dy]) => box(x + 0.4 + dx * 0.3 + sway, y + 0.4 + dy * 0.3, 1.2, 0.3, 0.3, 0.08, "#3fa45b"));
+  box(x + 0.38, y + 0.38, 1.25, 0.34, 0.34, 0.1, "#52bd6c");
+}
+
+/* ========= Mapa ========= */
+const C = { grass: "#7cc56a", grass2: "#6cb85c", sand: "#f3d38f", dirt: "#c08a55", field: "#9a6a3e", road: "#6f7488", stone: "#a9acb8", plaza: "#d9d3c3" };
+const tiles = [];
+const r0 = rng(77);
+for (let x = 0; x < N; x++) { tiles[x] = []; for (let y = 0; y < N; y++) {
+  const d = Math.hypot((x - 8.5) / 7.4, (y - 8.5) / 6.6) + (r0() - 0.5) * 0.14;
+  tiles[x][y] = d > 1 ? "water" : d > 0.86 ? "sand" : (r0() > 0.5 ? "grass" : "grass2");
+} }
+// sites: posição na grade + área ocupada
+const SITES = {
+  castle:  { gx: 4,  gy: 3,  w: 3, d: 3, top: 2.9 },
+  village: { gx: 10, gy: 3,  w: 3, d: 3, top: 1.3 },
+  city:    { gx: 7,  gy: 7,  w: 3, d: 3, top: 2.8 },
+  factory: { gx: 11, gy: 8,  w: 3, d: 3, top: 2.6 },
+  farm:    { gx: 3,  gy: 8,  w: 3, d: 3, top: 1.3 },
+  pit:     { gx: 7,  gy: 12, w: 3, d: 2, top: 1.4 },
+  tower:   { gx: 13, gy: 13, w: 1, d: 1, top: 3.6 }
+};
+function paint(x0, y0, w, d, type) { for (let x = x0; x < x0 + w; x++) for (let y = y0; y < y0 + d; y++) if (tiles[x] && tiles[x][y] && tiles[x][y] !== "water") tiles[x][y] = type; }
+paint(4, 3, 3, 3, "stone"); paint(7, 7, 3, 3, "road"); paint(11, 8, 3, 3, "road"); paint(7, 12, 3, 2, "dirt");
+paint(3, 8, 2, 3, "field"); paint(13, 13, 1, 1, "stone");
+// estradas de terra ligando
+[[7,4],[8,4],[9,4],[8,5],[8,6],[10,8],[6,9],[8,10],[8,11],[11,11],[12,12]].forEach(([x,y]) => { if (tiles[x][y] !== "water") tiles[x][y] = "dirt"; });
+tiles[12][13] = "sand"; tiles[13][14] = "sand";
+
+const decor = [];
+const r1 = rng(5);
+const occupied = (x, y) => Object.values(SITES).some(s => x >= s.gx - 0.5 && x < s.gx + s.w + 0.5 && y >= s.gy - 0.5 && y < s.gy + s.d + 0.5);
+for (let x = 0; x < N; x++) for (let y = 0; y < N; y++) {
+  const t = tiles[x][y];
+  if ((t === "grass" || t === "grass2") && !occupied(x, y) && r1() > 0.55) decor.push({ x, y, k: "tree", c: r1() > 0.5 ? "#3f9a4f" : "#2f8545", s: 0.8 + r1() * 0.5 });
+  else if (t === "sand" && !occupied(x, y) && r1() > 0.8) decor.push({ x, y, k: "palm" });
+}
+
+/* ========= Construções ========= */
+const DRAW = {
+  castle(g, t, lift) { const x = g.gx, y = g.gy, z = lift;
+    box(x, y, z, 3, 3, 0.9, "#b4b7c4");
+    box(x + 0.7, y + 0.7, z + 0.9, 1.6, 1.6, 1.2, "#c3c6d2"); roof(x + 0.6, y + 0.6, z + 2.1, 1.8, 1.8, 0.75, "#ff7a59");
+    [[0, 0], [2.45, 0], [0, 2.45], [2.45, 2.45]].forEach(([a, b]) => { box(x + a, y + b, z, 0.55, 0.55, 1.6, "#a5a8b6"); box(x + a - 0.05, y + b - 0.05, z + 1.6, 0.65, 0.65, 0.2, "#c9ccd8"); });
+    box(x + 1.5, y + 1.5, z + 2.85, 0.06, 0.06, 0.9, "#6b4a32");
+    const f = Math.sin(t * 4) * 0.08; poly([P(x + 1.53, y + 1.53, z + 3.7), P(x + 1.53, y + 2.2 + f, z + 3.55), P(x + 1.53, y + 1.53, z + 3.4)], "#ffd166");
+  },
+  village(g, t, lift) { const x = g.gx, y = g.gy, z = lift;
+    [[0, 0], [1.8, 0.2], [0.3, 1.9]].forEach(([a, b], i) => { box(x + a + 0.1, y + b + 0.1, z, 0.85, 0.85, 0.6, "#e8d3ac"); roof(x + a, y + b, z + 0.6, 1.05, 1.05, 0.5, ["#c05a3c", "#8f5a3a", "#c05a3c"][i]); });
+    box(x + 1.75, y + 1.75, z, 0.6, 0.6, 0.15, "#8d8f99");
+    const fl = 0.3 + Math.abs(Math.sin(t * 7)) * 0.15; box(x + 1.93, y + 1.93, z + 0.15, 0.24, 0.24, fl, "#ff9a3d"); box(x + 1.98, y + 1.98, z + 0.15, 0.14, 0.14, fl + 0.1, "#ffd166");
+    tree(x + 2.2, y + 2.2, 0.9, "#3f9a4f");
+  },
+  city(g, t, lift) { const x = g.gx, y = g.gy, z = lift; const hs = [2.4, 1.2, 1.7, 0.9, 1.5, 2.0, 1.1, 0.7, 1.3]; const cs = ["#8ec9e8", "#ffd166", "#f2f2f2", "#ff9f80", "#a0e3d0", "#cfd8ff", "#f2f2f2", "#ffd166", "#8ec9e8"];
+    for (let i = 0; i < 9; i++) { const a = i % 3, b = Math.floor(i / 3); box(x + a + 0.15, y + b + 0.15, z, 0.7, 0.7, hs[i], cs[i]); }
+    if (Math.floor(t * 2) % 2) box(x + 0.42, y + 0.42, z + 2.4, 0.16, 0.16, 0.3, "#ff7a59");
+  },
+  factory(g, t, lift) { const x = g.gx, y = g.gy, z = lift;
+    box(x, y, z, 3, 2, 1.1, "#ff8a4c"); for (let k = 0; k < 3; k++) roof(x + k, y, z + 1.1, 1, 2, 0.45, "#dfe3ea");
+    box(x + 2.4, y + 0.2, z + 1.1, 0.4, 0.4, 1.4, "#8c90a0");
+    if (!reduce) for (let k = 0; k < 3; k++) { const p = (t * 0.6 + k / 3) % 1; const [sx, sy] = P(x + 2.6, y + 0.4, z + 2.6 + p * 1.6); ctx.beginPath(); ctx.arc(sx + p * T * 0.6, sy, T * (0.18 + p * 0.35), 0, 7); ctx.fillStyle = "rgba(240,248,250," + (0.7 - p * 0.65) + ")"; ctx.fill(); }
+    box(x, y + 2.3, z, 3, 0.5, 0.2, "#3b4152"); const off = (t * 0.8) % 0.75;
+    for (let k = 0; k < 4; k++) { const px = x + 0.1 + ((k * 0.75 + off) % 2.8); box(px, y + 2.4, z + 0.2, 0.35, 0.3, 0.2, "#ffd166"); }
+  },
+  farm(g, t, lift) { const x = g.gx, y = g.gy, z = lift;
+    for (let a = 0; a < 2; a++) for (let b = 0; b < 3; b++) for (let k = 0; k < 3; k++) { const s = 0.25 + Math.sin(t * 2 + a + b + k) * 0.03; box(x + a + 0.12 + k * 0.28, y + b + 0.35, z, 0.16, 0.3, s + (b % 2) * 0.12, b % 2 ? "#ffd166" : "#8fdc5a"); }
+    box(x + 2.1, y + 0.2, z, 0.85, 1.6, 0.85, "#e0533d"); roof(x + 2.05, y + 0.15, z + 0.85, 0.95, 1.7, 0.55, "#7a4a33");
+    box(x + 2.25, y + 2.1, z, 0.5, 0.5, 1.5, "#e8e2d0"); roof(x + 2.22, y + 2.07, z + 1.5, 0.56, 0.56, 0.3, "#7a4a33");
+  },
+  pit(g, t, lift) { const x = g.gx, y = g.gy, z = lift;
+    box(x + 2.1, y + 0.1, z, 0.8, 0.8, 0.45, "#a87445"); box(x + 2.25, y + 0.25, z + 0.45, 0.5, 0.5, 0.3, "#b8834f");
+    box(x + 0.2, y + 0.5, z, 1.6, 0.35, 0.3, "#30333d"); box(x + 0.2, y + 1.3, z, 1.6, 0.35, 0.3, "#30333d");
+    box(x + 0.4, y + 0.7, z + 0.3, 1.2, 0.8, 0.45, "#ffc93c"); box(x + 0.45, y + 0.75, z + 0.75, 0.6, 0.6, 0.6, "#ffc93c"); box(x + 0.47, y + 0.77, z + 0.85, 0.55, 0.03, 0.4, "#9be0f0");
+    const a = Math.sin(t * 1.2) * 0.25; box(x + 1.5, y + 1.0, z + 0.75 + a * 0.3, 0.9, 0.22, 0.22, "#f0b52e"); box(x + 2.3, y + 1.0, z + 0.2 + a, 0.22, 0.22, 0.75, "#f0b52e"); box(x + 2.2, y + 0.92, z + a, 0.42, 0.4, 0.25, "#5b6070");
+  },
+  tower(g, t, lift) { const x = g.gx, y = g.gy, z = lift;
+    box(x, y, z, 1, 1, 0.4, "#e9e4d4");
+    for (let k = 0; k < 5; k++) box(x + 0.2, y + 0.2, z + 0.4 + k * 0.5, 0.6, 0.6, 0.5, k % 2 ? "#ff7a59" : "#f5f2ea");
+    box(x + 0.12, y + 0.12, z + 2.9, 0.76, 0.76, 0.12, "#3b4152");
+    const glow = 0.6 + Math.sin(t * 3) * 0.4; const [cx, cy] = P(x + 0.5, y + 0.5, z + 3.25);
+    const gr = ctx.createRadialGradient(cx, cy, 0, cx, cy, T * 2.4); gr.addColorStop(0, "rgba(255,209,102," + (0.55 * glow) + ")"); gr.addColorStop(1, "rgba(255,209,102,0)");
+    ctx.fillStyle = gr; ctx.beginPath(); ctx.arc(cx, cy, T * 2.4, 0, 7); ctx.fill();
+    box(x + 0.3, y + 0.3, z + 3.02, 0.4, 0.4, 0.35, "#ffd166");
+    const cz = z + 4.0 + Math.sin(t * 2) * 0.15; const [kx, ky] = P(x + 0.5, y + 0.5, cz);
+    ctx.beginPath(); ctx.ellipse(kx, ky, T * 0.32 * Math.abs(Math.cos(t * 2)) + 1, T * 0.32, 0, 0, 7); ctx.fillStyle = "#ffd166"; ctx.fill();
+  }
+};
+
+/* ========= Render ========= */
+let selected = 0, hover = -1;
+const lifts = PROJECTS.map(() => 0);
+function resize() {
+  const r = cv.getBoundingClientRect(); const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  W = r.width; H = r.height; cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  const wide = W > 900; const usableW = wide ? W - 400 : W;
+  T = Math.min(usableW / (N * 1.45), H / (N * 0.78));
+  OX = (wide ? usableW / 2 + 10 : W / 2); OY = H / 2 - (N * T) / 2 + T * 0.6;
+  placePins();
+}
+function drawFrame(t) {
+  ctx.clearRect(0, 0, W, H);
+  // água e terreno
+  for (let s = 0; s < 2 * N - 1; s++) for (let x = 0; x < N; x++) { const y = s - x; if (y < 0 || y >= N) continue;
+    const tp = tiles[x][y];
+    if (tp === "water") { const wv = reduce ? 0 : Math.sin(t * 1.6 + x * 0.7 + y * 0.45); const top = -0.3 + wv * 0.05; const c = wv > 0.55 ? "#5fe0dc" : wv > -0.2 ? "#36c3c9" : "#25aab5"; poly([P(x, y, top), P(x + 1, y, top), P(x + 1, y + 1, top), P(x, y + 1, top)], c); continue; }
+    const h = tp === "sand" ? 0.25 : 0.35, base = -0.45;
+    box(x, y, base, 1, 1, h + (tp === "sand" ? 0 : 0.1), C[tp] || C.grass);
+  }
+  // espuma na costa
+  if (!reduce) { ctx.fillStyle = "rgba(255,255,255,.35)"; for (let x = 0; x < N; x++) for (let y = 0; y < N; y++) if (tiles[x][y] === "sand") {
+    [[1,0],[0,1]].forEach(([dx,dy]) => { if (tiles[x+dx] && tiles[x+dx][y+dy] === "water" && Math.sin(t * 2 + x + y) > 0.2) { const [a, b] = P(x + dx * 1 + 0.5 * dy, y + dy * 1 + 0.5 * dx, -0.28); ctx.fillRect(a - T * 0.4, b - 1, T * 0.8, 2); } }); } }
+  // objetos em ordem de profundidade
+  const items = decor.map(d => ({ k: d.x + d.y + 1, f: () => d.k === "tree" ? tree(d.x, d.y, d.s, d.c) : palm(d.x, d.y, t) }));
+  PROJECTS.forEach((p, i) => { const g = SITES[p.site]; items.push({ k: g.gx + g.gy + (g.w + g.d) / 2, f: () => DRAW[p.site](g, t, lifts[i]) }); });
+  items.sort((a, b) => a.k - b.k).forEach(it => it.f());
+  // nuvens
+  if (!reduce) { ctx.fillStyle = "rgba(255,255,255,.55)"; [[0.1, 0.18, 1], [0.55, 0.1, 0.8], [0.8, 0.3, 1.2]].forEach(([fx, fy, s], i) => { const cx = ((fx * W + t * (12 + i * 5)) % (W + 300)) - 150, cy = fy * H; ctx.beginPath(); ctx.ellipse(cx, cy, 60 * s, 18 * s, 0, 0, 7); ctx.ellipse(cx + 40 * s, cy - 10 * s, 40 * s, 16 * s, 0, 0, 7); ctx.ellipse(cx - 35 * s, cy - 6 * s, 34 * s, 13 * s, 0, 0, 7); ctx.fill(); }); }
+}
+let start = performance.now(), visible = true;
+function loop(now) {
+  const t = (now - start) / 1000;
+  PROJECTS.forEach((p, i) => { const target = (i === selected || i === hover) ? 0.35 : 0; lifts[i] += (target - lifts[i]) * 0.15; });
+  drawFrame(t); placePins();
+  if (!reduce && visible) requestAnimationFrame(loop);
+}
+
+/* ========= Placas (HTML) ========= */
+const pinsEl = document.getElementById("pins");
+const pins = PROJECTS.map((p, i) => {
+  const b = document.createElement("button"); b.type = "button"; b.className = "pin";
+  b.innerHTML = "<b>" + (i + 1) + "</b><span class='nm'></span>"; b.querySelector(".nm").textContent = p.title;
+  b.setAttribute("aria-label", "Ver projeto " + p.title);
+  b.addEventListener("click", () => select(i));
+  b.addEventListener("mouseenter", () => { hover = i; if (reduce) drawFrame(0); });
+  b.addEventListener("mouseleave", () => { hover = -1; });
+  pinsEl.appendChild(b); return b;
+});
+function placePins() { PROJECTS.forEach((p, i) => { const g = SITES[p.site]; const [x, y] = P(g.gx + g.w / 2, g.gy + g.d / 2, g.top + lifts[i] + 0.4); pins[i].style.left = x + "px"; pins[i].style.top = y + "px"; }); }
+
+cv.addEventListener("click", e => {
+  const r = cv.getBoundingClientRect(); const mx = e.clientX - r.left, my = e.clientY - r.top; let best = -1, bd = 1e9;
+  PROJECTS.forEach((p, i) => { const g = SITES[p.site]; const [x, y] = P(g.gx + g.w / 2, g.gy + g.d / 2, g.top / 2); const d = Math.hypot(x - mx, y - my); if (d < bd) { bd = d; best = i; } });
+  if (bd < T * 4) select(best);
+});
+
+/* ========= Painel e lista ========= */
+const $ = id => document.getElementById(id);
+function select(i) {
+  selected = (i + PROJECTS.length) % PROJECTS.length; const p = PROJECTS[selected];
+  $("cNum").textContent = "PROJETO " + String(selected + 1).padStart(2, "0") + " / " + String(PROJECTS.length).padStart(2, "0");
+  $("cTitle").textContent = p.title;
+  $("cChip").className = "chip " + p.status; $("cChip").textContent = STATUS[p.status];
+  $("cText").textContent = p.text;
+  $("cTags").innerHTML = ""; p.tags.concat(p.plat).forEach(t => { const s = document.createElement("span"); s.textContent = t; $("cTags").appendChild(s); });
+  const play = $("cPlay");
+  if (p.url) { play.href = p.url; play.className = "play"; play.textContent = (p.site === "tower" ? "Abrir ↗" : "Jogar agora ↗"); play.removeAttribute("aria-disabled"); }
+  else { play.removeAttribute("href"); play.className = "play off"; play.setAttribute("aria-disabled", "true"); play.textContent = p.status === "idea" ? "Em planejamento" : p.status === "done" ? "Link em breve" : "Versão de teste em breve"; }
+  pins.forEach((b, k) => b.setAttribute("aria-pressed", k === selected ? "true" : "false"));
+  if (reduce) { PROJECTS.forEach((_, k) => lifts[k] = k === selected ? 0.35 : 0); drawFrame(0); placePins(); }
+}
+$("prev").addEventListener("click", () => select(selected - 1));
+$("next").addEventListener("click", () => select(selected + 1));
+
+const list = $("list");
+PROJECTS.forEach((p, i) => {
+  const row = document.createElement("button"); row.type = "button"; row.className = "row";
+  row.innerHTML = "<span class='n'>" + String(i + 1).padStart(2, "0") + "</span><span><strong></strong><small></small></span><span class='plat'></span><span class='chip " + p.status + "'>" + STATUS[p.status] + "</span>";
+  row.querySelector("strong").textContent = p.title; row.querySelector("small").textContent = p.tags.join(" · "); row.querySelector(".plat").textContent = p.plat;
+  row.addEventListener("click", () => { select(i); $("ilha").scrollIntoView({ behavior: reduce ? "auto" : "smooth" }); });
+  list.appendChild(row);
+});
+
+$("copy").addEventListener("click", async () => { const b = $("copy"); try { await navigator.clipboard.writeText("nathanmacioscik12@gmail.com"); b.textContent = "Copiado!"; } catch (e) { b.textContent = "Selecione e copie"; } setTimeout(() => b.textContent = "Copiar e-mail", 2000); });
+$("year").textContent = new Date().getFullYear();
+
+let rt; window.addEventListener("resize", () => { clearTimeout(rt); rt = setTimeout(() => { resize(); if (reduce) drawFrame(0); }, 120); });
+if ("IntersectionObserver" in window) new IntersectionObserver(es => { const v = es[0].isIntersecting; if (v && !visible && !reduce) { visible = true; requestAnimationFrame(loop); } visible = v; }).observe(cv);
+resize(); select(0);
+if (reduce) drawFrame(0); else requestAnimationFrame(loop);
+</script>
+</body>
+</html>
