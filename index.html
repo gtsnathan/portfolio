@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Ilha de Projetos do Nathan</title>
+<title>Nathan · Jogos, Sites e E-commerce</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bungee&family=Outfit:wght@400;500;700;800&display=swap" rel="stylesheet">
@@ -40,6 +40,7 @@ nav ul a:hover { color: var(--text); }
 .intro { display: flex; align-items: end; justify-content: space-between; gap: 24px; flex-wrap: wrap; padding: 22px 0 6px; }
 .intro h1 { font-family: var(--font-display); font-weight: 400; font-size: clamp(30px, 5.2vw, 62px); line-height: 1.02; margin: 0; text-wrap: balance; max-width: 13em; }
 .intro h1 span { color: var(--coral); }
+.role { font-weight: 800; color: var(--mint); letter-spacing: .4px; margin-bottom: 12px; font-size: 15px; }
 .intro p { margin: 0; color: var(--muted); max-width: 25em; font-size: 17px; }
 .intro p b { color: var(--sun); font-weight: 700; }
 
@@ -81,6 +82,7 @@ nav ul a:hover { color: var(--text); }
 .chip.dev { color: var(--sun); background: rgba(255,209,102,.14); }
 .chip.idea { color: #9ad3ff; background: rgba(154,211,255,.14); }
 .chip.done { color: #ffb3c7; background: rgba(255,179,199,.14); }
+.chip.personal { color: #d7c2ff; background: rgba(215,194,255,.14); }
 .card p { margin: 0; color: var(--muted); }
 .tags { display: flex; gap: 6px; flex-wrap: wrap; }
 .tags span { font-size: 13px; padding: 3px 10px; border-radius: 6px; background: rgba(124,224,195,.1); color: var(--text); }
@@ -97,6 +99,27 @@ nav ul a:hover { color: var(--text); }
 .step button:hover { background: rgba(255,255,255,.12); }
 .hint { position: absolute; left: 18px; bottom: 16px; font-size: 13px; color: rgba(234,250,246,.75); background: rgba(5,35,43,.55); padding: 6px 12px; border-radius: 999px; pointer-events: none; }
 
+/* E-commerce */
+.eco { background: linear-gradient(135deg, #0e4250 0%, #0b3a45 60%, #0a3440 100%); border: 1px solid var(--line); border-radius: 22px; padding: 30px; display: grid; gap: 24px; }
+.eco-head { display: grid; grid-template-columns: 1fr auto; gap: 8px 30px; align-items: end; }
+.eco-head .sec { margin: 0; grid-column: 1; }
+.eco-head p { grid-column: 1; margin: 0; color: var(--muted); max-width: 44em; font-size: 17px; }
+.eco-head p b { color: var(--text); }
+.eco-cta { grid-column: 2; grid-row: 1 / span 2; padding: 13px 22px; }
+.eco-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.svc { background: rgba(5,35,43,.55); border: 1px solid rgba(124,224,195,.15); border-radius: 16px; padding: 20px; }
+.svc-k { width: 42px; height: 42px; border-radius: 12px; display: grid; place-items: center; font-family: var(--font-display); font-size: 15px; color: var(--deep); background: var(--k); margin-bottom: 12px; }
+.svc h4 { margin: 0 0 8px; font-size: 19px; }
+.svc ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 6px; color: var(--muted); font-size: 15px; }
+.svc li { padding-left: 18px; position: relative; }
+.svc li::before { content: ""; position: absolute; left: 0; top: .6em; width: 8px; height: 8px; border-radius: 2px; background: var(--mint); transform: rotate(45deg); }
+.flow { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; font-weight: 700; font-size: 14px; }
+.flow span { padding: 6px 12px; border-radius: 999px; background: rgba(255,255,255,.06); }
+.flow span.hub { background: var(--mint); color: var(--deep); }
+.flow i { width: 6px; height: 6px; border-radius: 50%; background: var(--line); }
+.flow i.arr { width: 22px; height: 2px; border-radius: 0; background: var(--mint); position: relative; }
+.flow i.arr::after { content: ""; position: absolute; right: -2px; top: -4px; border: 5px solid transparent; border-left: 6px solid var(--mint); border-right: none; }
+
 /* Lista */
 section { padding: 56px 0 10px; }
 h3.sec { font-family: var(--font-display); font-weight: 400; font-size: 28px; margin: 0 0 18px; }
@@ -107,6 +130,8 @@ h3.sec { font-family: var(--font-display); font-weight: 400; font-size: 28px; ma
   cursor: pointer; text-align: left; font: inherit; color: inherit; width: 100%;
 }
 .row:hover { border-color: var(--line); }
+.group { font-weight: 800; font-size: 13px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--sun); margin: 14px 0 2px; }
+.group:first-child { margin-top: 0; }
 .row .n { font-family: var(--font-display); color: var(--coral); font-size: 18px; font-variant-numeric: tabular-nums; }
 .row strong { font-size: 17px; }
 .row small { color: var(--muted); display: block; font-size: 14px; }
@@ -124,6 +149,10 @@ h3.sec { font-family: var(--font-display); font-weight: 400; font-size: 28px; ma
 footer { color: var(--muted); font-size: 14px; padding: 40px 0; }
 
 @media (max-width: 900px) {
+  .eco { padding: 22px; }
+  .eco-head { grid-template-columns: 1fr; }
+  .eco-cta { grid-column: 1; grid-row: auto; justify-self: start; }
+  .eco-grid { grid-template-columns: 1fr; }
   .world { height: auto; overflow: visible; background: none; }
   .stage { position: relative; height: 72vw; min-height: 340px; border-radius: 22px; overflow: hidden;
     background: radial-gradient(ellipse 70% 60% at 50% 55%, #17a2ad 0%, #0d7684 40%, #0a4f5c 75%, #083b46 100%); }
@@ -144,14 +173,18 @@ footer { color: var(--muted); font-size: 14px; padding: 40px 0; }
     <a class="logo" href="#ilha"><i></i>Nathan</a>
     <ul>
       <li><a href="#ilha">Ilha</a></li>
+      <li><a href="#ecommerce">E-commerce</a></li>
       <li><a href="#projetos">Projetos</a></li>
       <li><a href="#contato">Contato</a></li>
     </ul>
   </nav>
 
   <div class="intro" id="ilha">
+    <div>
+    <div class="role">Desenvolvedor de jogos e sites · Especialista em e-commerce</div>
     <h1>Bem-vindo à minha <span>ilha</span> de projetos.</h1>
-    <p>Cada construção é um jogo ou app que eu fiz. <b>Toque numa delas</b> para ver o projeto e jogar direto no navegador ou no celular.</p>
+    </div>
+    <p>Cada construção é um jogo, site ou sistema que eu fiz. <b>Toque numa delas</b> para ver o projeto e jogar direto no navegador ou no celular.</p>
   </div>
 
   <div class="world">
@@ -176,6 +209,27 @@ footer { color: var(--muted); font-size: 14px; padding: 40px 0; }
     </aside>
   </div>
 
+  <section id="ecommerce">
+    <div class="eco">
+      <div class="eco-head">
+        <h3 class="sec">Especialista em e-commerce</h3>
+        <p>Ajudo lojas a venderem mais nos marketplaces, principalmente <b>Shopee</b> e <b>Mercado Livre</b>, com a operação integrada ao <b>Tiny ERP (Olist)</b>: estoque, pedidos e notas num lugar só.</p>
+        <a class="play eco-cta" href="#contato">Pedir um orçamento</a>
+      </div>
+      <div class="eco-grid">
+        <article class="svc"><div class="svc-k" style="--k:#ff7a59">S</div><h4>Shopee</h4>
+          <ul><li>Cadastro e otimização de anúncios</li><li>Títulos, fotos e variações que convertem</li><li>Gestão da loja e campanhas</li></ul></article>
+        <article class="svc"><div class="svc-k" style="--k:#ffd166">ML</div><h4>Mercado Livre</h4>
+          <ul><li>Anúncios otimizados para a busca</li><li>Cuidado com reputação e atendimento</li><li>Gestão de vendas e envios</li></ul></article>
+        <article class="svc"><div class="svc-k" style="--k:#7ce0c3">T</div><h4>Tiny ERP (Olist)</h4>
+          <ul><li>Integração com Shopee e Mercado Livre</li><li>Estoque sincronizado entre canais</li><li>Pedidos centralizados e emissão de notas fiscais</li></ul></article>
+      </div>
+      <div class="flow" aria-label="Fluxo da integração">
+        <span>Shopee</span><i></i><span>Mercado Livre</span><i class="arr"></i><span class="hub">Tiny ERP</span><i class="arr"></i><span>Estoque</span><i></i><span>Pedidos</span><i></i><span>Notas fiscais</span>
+      </div>
+    </div>
+  </section>
+
   <section id="projetos">
     <h3 class="sec">Todos os projetos</h3>
     <div class="list" id="list"></div>
@@ -185,12 +239,12 @@ footer { color: var(--muted); font-size: 14px; padding: 40px 0; }
     <div class="about">
       <div class="box">
         <h3 class="sec">Sobre</h3>
-        <p>Sou o Nathan. Crio jogos de estratégia, construção e simulação com visual isométrico e pixel art, sempre pensando em rodar bem no celular. Cada projeto sai em versões, da 0.1 até a 1.0, e vai para o ar com deploy automático.</p>
-        <div class="tools"><span>Phaser 3</span><span>JavaScript</span><span>HTML e CSS</span><span>Cloudflare Workers</span><span>GitHub</span><span>Android</span></div>
+        <p>Sou o Nathan. Crio jogos de estratégia, construção e simulação com visual isométrico e pixel art, além de sites para empresas. No e-commerce, trabalho com lojas na Shopee e no Mercado Livre integradas ao Tiny ERP (Olist).</p>
+        <div class="tools"><span>Phaser 3</span><span>JavaScript</span><span>HTML e CSS</span><span>Cloudflare Workers</span><span>GitHub</span><span>Android</span><span>Shopee</span><span>Mercado Livre</span><span>Tiny ERP (Olist)</span></div>
       </div>
       <div class="box">
         <h3 class="sec">Contato</h3>
-        <p>Quer testar um jogo, dar uma ideia ou encomendar um site? Me manda um e-mail.</p>
+        <p>Precisa de um site, de ajuda com sua loja na Shopee ou no Mercado Livre, ou de integração com o Tiny? Me manda um e-mail com o que você precisa.</p>
         <div class="mail"><code>nathanmacioscik12@gmail.com</code><button type="button" id="copy">Copiar e-mail</button></div>
         <p style="margin-top:14px">GitHub: <b>github.com/seu-usuario</b></p>
       </div>
@@ -221,11 +275,17 @@ const PROJECTS = [
   { site: "city", status: "idea", title: "Gerenciador de Cidade", plat: "Em planejamento",
     text: "Um city builder com simulação profunda no nível do Cities: Skylines, mas com visual simples e leve para rodar em qualquer aparelho.",
     tags: ["City builder", "Simulação"] },
-  { site: "tower", status: "dev", title: "Assistente Financeiro", plat: "WhatsApp",
+  { site: "shop", status: "live", kind: "site", title: "Showroom Poliuretano", plat: "Site · Celular e PC",
+    text: "Site vitrine para apresentar uma linha de produtos de poliuretano: catálogo organizado, visual limpo e contato rápido com o cliente. Publicado no Cloudflare.",
+    tags: ["Site institucional", "Catálogo", "Responsivo"], url: "https://showroom-poliuretano.nathanmacioscik12.workers.dev/" },
+  { site: "portal", status: "personal", kind: "site", title: "Servidor MU Online", plat: "PC · Android",
+    text: "Servidor de MU Online com site próprio, hospedado no meu PC. Os jogadores entram pelo celular Android com um APK, de casa ou pelos dados móveis.",
+    tags: ["Servidor", "Site", "Rede"] },
+  { site: "tower", status: "dev", kind: "site", title: "Assistente Financeiro", plat: "WhatsApp",
     text: "Bot de WhatsApp em que você manda os gastos do mês e ele registra e organiza tudo. O plano é virar um assistente por voz completo.",
     tags: ["Bot", "WhatsApp", "Finanças"] }
 ];
-const STATUS = { live: "No ar", dev: "Em desenvolvimento", idea: "Ideia", done: "Concluído" };
+const STATUS = { live: "No ar", dev: "Em desenvolvimento", idea: "Ideia", done: "Concluído", personal: "Projeto pessoal" };
 
 /* ========= Motor isométrico ========= */
 const cv = document.getElementById("island");
@@ -282,11 +342,13 @@ const SITES = {
   factory: { gx: 11, gy: 8,  w: 3, d: 3, top: 2.6 },
   farm:    { gx: 3,  gy: 8,  w: 3, d: 3, top: 1.3 },
   pit:     { gx: 7,  gy: 12, w: 3, d: 2, top: 1.4 },
-  tower:   { gx: 13, gy: 13, w: 1, d: 1, top: 3.6 }
+  tower:   { gx: 13, gy: 13, w: 1, d: 1, top: 3.6 },
+  shop:    { gx: 3,  gy: 12, w: 2, d: 2, top: 1.9 },
+  portal:  { gx: 13, gy: 5,  w: 1, d: 1, top: 2.6 }
 };
 function paint(x0, y0, w, d, type) { for (let x = x0; x < x0 + w; x++) for (let y = y0; y < y0 + d; y++) if (tiles[x] && tiles[x][y] && tiles[x][y] !== "water") tiles[x][y] = type; }
 paint(4, 3, 3, 3, "stone"); paint(7, 7, 3, 3, "road"); paint(11, 8, 3, 3, "road"); paint(7, 12, 3, 2, "dirt");
-paint(3, 8, 2, 3, "field"); paint(13, 13, 1, 1, "stone");
+paint(3, 8, 2, 3, "field"); paint(13, 13, 1, 1, "stone"); paint(3, 12, 2, 2, "plaza"); paint(13, 5, 1, 1, "stone");
 // estradas de terra ligando
 [[7,4],[8,4],[9,4],[8,5],[8,6],[10,8],[6,9],[8,10],[8,11],[11,11],[12,12]].forEach(([x,y]) => { if (tiles[x][y] !== "water") tiles[x][y] = "dirt"; });
 tiles[12][13] = "sand"; tiles[13][14] = "sand";
@@ -336,6 +398,23 @@ const DRAW = {
     box(x + 0.2, y + 0.5, z, 1.6, 0.35, 0.3, "#30333d"); box(x + 0.2, y + 1.3, z, 1.6, 0.35, 0.3, "#30333d");
     box(x + 0.4, y + 0.7, z + 0.3, 1.2, 0.8, 0.45, "#ffc93c"); box(x + 0.45, y + 0.75, z + 0.75, 0.6, 0.6, 0.6, "#ffc93c"); box(x + 0.47, y + 0.77, z + 0.85, 0.55, 0.03, 0.4, "#9be0f0");
     const a = Math.sin(t * 1.2) * 0.25; box(x + 1.5, y + 1.0, z + 0.75 + a * 0.3, 0.9, 0.22, 0.22, "#f0b52e"); box(x + 2.3, y + 1.0, z + 0.2 + a, 0.22, 0.22, 0.75, "#f0b52e"); box(x + 2.2, y + 0.92, z + a, 0.42, 0.4, 0.25, "#5b6070");
+  },
+  shop(g, t, lift) { const x = g.gx, y = g.gy, z = lift;
+    box(x + 0.15, y + 0.15, z, 1.7, 1.5, 1.2, "#f5f2ea");
+    box(x + 0.25, y + 1.64, z + 0.1, 1.5, 0.02, 0.75, "#8fd3e8");
+    for (let k = 0; k < 5; k++) box(x + 0.15 + k * 0.34, y + 1.65, z + 0.95, 0.34, 0.25, 0.08, k % 2 ? "#f5f2ea" : "#ff7a59");
+    box(x + 0.35, y + 0.35, z + 1.2, 1.3, 0.25, 0.4, "#05232b"); box(x + 0.42, y + 0.36, z + 1.28, 1.16, 0.25, 0.24, "#ffd166");
+    const bob = Math.sin(t * 2) * 0.04; box(x + 0.4, y + 1.95, z + bob, 0.3, 0.02, 0.0, "#000");
+    [["#ff7a59", 0.35], ["#7ce0c3", 0.85], ["#ffd166", 1.35]].forEach(([c, a], i) => box(x + a, y + 1.72, z + 0.12, 0.25, 0.12, 0.25 + i * 0.08, c));
+  },
+  portal(g, t, lift) { const x = g.gx, y = g.gy, z = lift;
+    box(x + 0.05, y + 0.05, z, 0.9, 0.9, 0.3, "#4a4f63"); box(x + 0.2, y + 0.2, z + 0.3, 0.6, 0.6, 0.25, "#5a6078");
+    const [cx, cy] = P(x + 0.5, y + 0.5, z + 1.5 + Math.sin(t * 2) * 0.12);
+    const gr = ctx.createRadialGradient(cx, cy, 0, cx, cy, T * 2); gr.addColorStop(0, "rgba(124,224,195,.55)"); gr.addColorStop(1, "rgba(124,224,195,0)");
+    ctx.fillStyle = gr; ctx.beginPath(); ctx.arc(cx, cy, T * 2, 0, 7); ctx.fill();
+    const s = T * 0.45, k = Math.abs(Math.cos(t * 1.3));
+    ctx.beginPath(); ctx.moveTo(cx, cy - s * 1.6); ctx.lineTo(cx + s * k + 1, cy); ctx.lineTo(cx, cy + s * 1.6); ctx.lineTo(cx - s * k - 1, cy); ctx.closePath(); ctx.fillStyle = "#7ce0c3"; ctx.fill();
+    ctx.beginPath(); ctx.moveTo(cx, cy - s * 1.6); ctx.lineTo(cx + s * k + 1, cy); ctx.lineTo(cx, cy + s * 1.6); ctx.closePath(); ctx.fillStyle = "#b9f5e3"; ctx.fill();
   },
   tower(g, t, lift) { const x = g.gx, y = g.gy, z = lift;
     box(x, y, z, 1, 1, 0.4, "#e9e4d4");
@@ -417,8 +496,8 @@ function select(i) {
   $("cText").textContent = p.text;
   $("cTags").innerHTML = ""; p.tags.concat(p.plat).forEach(t => { const s = document.createElement("span"); s.textContent = t; $("cTags").appendChild(s); });
   const play = $("cPlay");
-  if (p.url) { play.href = p.url; play.className = "play"; play.textContent = (p.site === "tower" ? "Abrir ↗" : "Jogar agora ↗"); play.removeAttribute("aria-disabled"); }
-  else { play.removeAttribute("href"); play.className = "play off"; play.setAttribute("aria-disabled", "true"); play.textContent = p.status === "idea" ? "Em planejamento" : p.status === "done" ? "Link em breve" : "Versão de teste em breve"; }
+  if (p.url) { play.href = p.url; play.className = "play"; play.textContent = (p.kind === "site" ? "Visitar site ↗" : "Jogar agora ↗"); play.removeAttribute("aria-disabled"); }
+  else { play.removeAttribute("href"); play.className = "play off"; play.setAttribute("aria-disabled", "true"); play.textContent = p.status === "idea" ? "Em planejamento" : p.status === "done" ? "Link em breve" : p.status === "personal" ? "Acesso por convite" : "Versão de teste em breve"; }
   pins.forEach((b, k) => b.setAttribute("aria-pressed", k === selected ? "true" : "false"));
   if (reduce) { PROJECTS.forEach((_, k) => lifts[k] = k === selected ? 0.35 : 0); drawFrame(0); placePins(); }
 }
@@ -426,12 +505,15 @@ $("prev").addEventListener("click", () => select(selected - 1));
 $("next").addEventListener("click", () => select(selected + 1));
 
 const list = $("list");
-PROJECTS.forEach((p, i) => {
+[["Jogos", p => p.kind !== "site"], ["Sites e sistemas", p => p.kind === "site"]].forEach(([label, fn]) => {
+  const h = document.createElement("div"); h.className = "group"; h.textContent = label; list.appendChild(h);
+  PROJECTS.forEach((p, i) => { if (!fn(p)) return;
   const row = document.createElement("button"); row.type = "button"; row.className = "row";
   row.innerHTML = "<span class='n'>" + String(i + 1).padStart(2, "0") + "</span><span><strong></strong><small></small></span><span class='plat'></span><span class='chip " + p.status + "'>" + STATUS[p.status] + "</span>";
   row.querySelector("strong").textContent = p.title; row.querySelector("small").textContent = p.tags.join(" · "); row.querySelector(".plat").textContent = p.plat;
   row.addEventListener("click", () => { select(i); $("ilha").scrollIntoView({ behavior: reduce ? "auto" : "smooth" }); });
   list.appendChild(row);
+  });
 });
 
 $("copy").addEventListener("click", async () => { const b = $("copy"); try { await navigator.clipboard.writeText("nathanmacioscik12@gmail.com"); b.textContent = "Copiado!"; } catch (e) { b.textContent = "Selecione e copie"; } setTimeout(() => b.textContent = "Copiar e-mail", 2000); });
