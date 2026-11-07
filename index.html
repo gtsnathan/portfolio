@@ -263,15 +263,9 @@ const PROJECTS = [
   { site: "village", status: "live", title: "Vale do Ermo", plat: "Navegador · Android em breve",
     text: "Construção e sobrevivência de uma vila medieval no estilo Banished. Pixel art isométrica com Phaser 3, lançada em versões rumo à 1.0.",
     tags: ["City builder", "Sobrevivência", "Phaser 3"], url: "https://vale-do-ermo.nathanmacioscik12.workers.dev" },
-  { site: "factory", status: "dev", title: "Factory Simulator", plat: "Navegador · Android",
-    text: "Jogo de fã, não oficial, de gerenciamento de uma fábrica de motosserras: linhas de produção, estoque e expansão da fábrica.",
-    tags: ["Gerenciamento", "Isométrico", "Phaser 3"] },
-  { site: "pit", status: "dev", title: "Operador de Escavadeira", plat: "Navegador · Celular",
-    text: "Simulador de escavadeira em primeira e terceira pessoa: cavar, carregar o caminhão e entregar a obra no prazo.",
-    tags: ["Simulação", "1ª e 3ª pessoa"] },
-  { site: "farm", status: "done", title: "Jogo de Fazenda", plat: "Navegador",
+  { site: "farm", status: "live", title: "Fazenda dos Sonhos", plat: "Navegador · Celular",
     text: "Meu primeiro jogo concluído: plantar, colher, vender e fazer a fazenda crescer.",
-    tags: ["Fazenda", "Casual"] },
+    tags: ["Fazenda", "Casual"], url: "https://fazenda-dos-sonhos.nathanmacioscik12.workers.dev/entrar/" },
   { site: "city", status: "idea", title: "Gerenciador de Cidade", plat: "Em planejamento",
     text: "Um city builder com simulação profunda no nível do Cities: Skylines, mas com visual simples e leve para rodar em qualquer aparelho.",
     tags: ["City builder", "Simulação"] },
@@ -339,18 +333,16 @@ const SITES = {
   castle:  { gx: 4,  gy: 3,  w: 3, d: 3, top: 2.9 },
   village: { gx: 10, gy: 3,  w: 3, d: 3, top: 1.3 },
   city:    { gx: 7,  gy: 7,  w: 3, d: 3, top: 2.8 },
-  factory: { gx: 11, gy: 8,  w: 3, d: 3, top: 2.6 },
   farm:    { gx: 3,  gy: 8,  w: 3, d: 3, top: 1.3 },
-  pit:     { gx: 7,  gy: 12, w: 3, d: 2, top: 1.4 },
   tower:   { gx: 13, gy: 13, w: 1, d: 1, top: 3.6 },
   shop:    { gx: 3,  gy: 12, w: 2, d: 2, top: 1.9 },
-  portal:  { gx: 13, gy: 5,  w: 1, d: 1, top: 2.6 }
+  portal:  { gx: 12, gy: 9,  w: 1, d: 1, top: 2.6 }
 };
 function paint(x0, y0, w, d, type) { for (let x = x0; x < x0 + w; x++) for (let y = y0; y < y0 + d; y++) if (tiles[x] && tiles[x][y] && tiles[x][y] !== "water") tiles[x][y] = type; }
-paint(4, 3, 3, 3, "stone"); paint(7, 7, 3, 3, "road"); paint(11, 8, 3, 3, "road"); paint(7, 12, 3, 2, "dirt");
-paint(3, 8, 2, 3, "field"); paint(13, 13, 1, 1, "stone"); paint(3, 12, 2, 2, "plaza"); paint(13, 5, 1, 1, "stone");
+paint(4, 3, 3, 3, "stone"); paint(7, 7, 3, 3, "road"); 
+paint(3, 8, 2, 3, "field"); paint(13, 13, 1, 1, "stone"); paint(3, 12, 2, 2, "plaza"); paint(12, 9, 1, 1, "stone");
 // estradas de terra ligando
-[[7,4],[8,4],[9,4],[8,5],[8,6],[10,8],[6,9],[8,10],[8,11],[11,11],[12,12]].forEach(([x,y]) => { if (tiles[x][y] !== "water") tiles[x][y] = "dirt"; });
+[[7,4],[8,4],[9,4],[8,5],[8,6],[10,8],[6,9],[8,10],[8,11],[12,12]].forEach(([x,y]) => { if (tiles[x][y] !== "water") tiles[x][y] = "dirt"; });
 tiles[12][13] = "sand"; tiles[13][14] = "sand";
 
 const decor = [];
